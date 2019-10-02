@@ -21,5 +21,68 @@ $(document)
             return uuid;
         }
 
-        // code to be implemented
-    });
+       // code to be implemented
+       //strike through items
+        $(function(){
+            $(document).on("click",".done-todo",function(){
+              $(this).closest('li').toggleClass('checked');
+            });
+        });
+
+        // filters
+        $( '#filters li a' ).click(function() { 
+            var attrib = $(this).attr('data-filter');
+            $('#filters li a').removeClass('selected');
+            $(this).addClass('selected');
+
+            if(attrib == 'all') {
+                $('ol li').show();        
+            }
+            if(attrib == 'active') {
+                $('ol li').show();        
+                $('ol li.checked').hide();
+            }
+            if(attrib == 'complete') {
+                $('ol li').hide();        
+                $('ol li.checked').show();
+            }
+            return false;
+        });//end filters
+
+        $('ol').on('dblclick', 'li', function () {
+            $(this).attr('contentEditable', 'true').focus()
+            .keypress(function (event) {
+                var keycode = (event.keyCode
+                    ? event.keyCode
+                    : event.which);
+                    if (keycode == '13') {
+                        event.target.blur();
+                        $(this).attr('contenteditable', 'false');
+                    }
+            });
+
+         });//end dblclck
+
+        function getInput(){
+            return $('input[name=ListItem]').val();
+        }
+
+        //add item via button
+        $('#button').click(function(){
+           $('ol').append(`<li id='${generateUUID()}' class=''>
+            <input name='done-todo' type='checkbox' class='done-todo'><span> ${getInput()} </span></li>`);
+                $(this).val('');
+        });
+
+        //add item via keyboard
+        $('input[name=ListItem]').keypress(function(e){
+                if(e.which == 13){
+                    e.preventDefault();
+                    $('ol').append(`<li id='${generateUUID()}' class=''>
+                <input name='done-todo' type='checkbox' class='done-todo'><span> ${getInput()} </span></li>`);
+                    $(this).val('');
+                }
+        });
+
+
+});//end todo.js
